@@ -1,9 +1,22 @@
-double
+double mike
 123
 12.2
-.12
-blow
-<= <
->= >
-
-+ - * / % \ < > = ! ; , . [ ] ( ) { }
+//.12
+blow me
+<=
+>=
+/* hi */
+//Comment this
+]
+"string here"
++ - * / < > = ! ; , . [ ] ( ) { }
+== != && || []
+false
+0x0
+0xaF2
+0x
+0X12aE
+12.E+2
+/* Work
+readable
+random shit

@@ -5,7 +5,8 @@
 #include "token.h"
 
 std::string string_content;
-
+std::string length_check;
+int line_check;
 %}
 
 
@@ -15,10 +16,17 @@ EQ [=][=]
 NEQ [!][=]
 AND [&][&]
 OR [|][|]
+ARRAY [[]]
 
-DBLLITERAL [0-9]+\.[0-9]*
-INTLITERAL [0-9]+
-IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
+DBLLITERAL ([0-9]+\.[0-9]*)([E]\+[0-9]*)?
+
+INTLITERAL ([0][xX]([A-Fa-f0-9]+))|([0-9]+)
+
+IDENTIFIER [A-Za-z][A-Za-z0-9_]*
+
+BOOLLITERAL  ^([t][r][u][e]|[f][a][l][s][e])$
+
+FOLLOW [[:space:]]*:
 
 
 %x STRING
@@ -26,6 +34,7 @@ IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
 
 
 %%
+  //Ident for c++ code
 void { return make_token(T_VOID, current_line);}
 int  { return make_token(T_INT, current_line); }
 double { return make_token(T_DOUBLE, current_line); }
@@ -49,14 +58,27 @@ Print {return make_token(T_PRINT, current_line);}
 ReadInteger {return make_token(T_READINTEGER, current_line);}
 ReadLine {return make_token(T_READLINE, current_line);}
 
-{IDENTIFIER} { return make_token(T_IDENTIFIER, current_line, yytext); }
+{IDENTIFIER} {
+  length_check = yytext;
+  if (length_check.length() > 31)
+  {
+    lex_error("Identifier  %s too long", yytext);
+  }
+  return make_token(T_IDENTIFIER, current_line, yytext); }
 {INTLITERAL} { return make_token(T_INTLITERAL, current_line, yytext); }
 {DBLLITERAL} { return make_token(T_DBLLITERAL, current_line, yytext); }
 
+{BOOLLITERAL} {return make_token(T_BOOLLITERAL, current_line, yytext);}
+
 {GE} {return make_token(T_GE, current_line);}
 {LE} {return make_token(T_LE, current_line);}
+{EQ} {return make_token(T_EQ, current_line);}
+{NEQ} {return make_token(T_NEQ, current_line);}
+{AND} {return make_token(T_AND, current_line);}
+{OR} {return make_token(T_OR, current_line);}
+{ARRAY} {return make_token(T_ARRAY, current_line);}
 
-[+-<>/%\\*=![]\(\)\{\}] { return make_token(yytext[0], current_line); }
+[+\-/\*<>=!;,.[(\){\}\]] { return make_token(yytext[0], current_line); }
 
 
 \" { BEGIN(STRING); }
@@ -66,15 +88,19 @@ ReadLine {return make_token(T_READLINE, current_line);}
 <STRING>[^\n"]* { string_content = yytext; }
 
 
-\/\* { BEGIN(COMMENT); }
+\/\* { BEGIN(COMMENT);
+  line_check = current_line;}
 <COMMENT>\*\/ { BEGIN(INITIAL); }
+<COMMENT><<EOF>> {lex_error("unclosed block comment beginning on line %i", line_check); }
 <COMMENT>. {}
 
 
 <INITIAL,COMMENT>\n { current_line++; }
 \/\/.* {}
 
+[" "] {}
+[\t] {}
 
-[ \t] {}
+. { lex_error("Unexpected character %s", yytext); }
 
 %%

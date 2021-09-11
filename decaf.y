@@ -1,8 +1,9 @@
-/* These are the tokens.
+/* HI! These are the tokens.
    By convention (in CS 310) they have numbers starting with 260. Take care that
    this list exactly matches the array of strings declared in token.cc. These tokens are only used for multi-character tokens. Single-character tokens
    map to their characters directly.
 */
+
 %token T_VOID 260 "void"
 %token T_INT 261 "int"
 %token T_DOUBLE 262 "double"
