@@ -66,7 +66,7 @@
 
 
 /* First part of user prologue.  */
-#line 49 "decaf.y"
+#line 50 "decaf.y"
 
 #include "parsetree.h"
 #define YYSTYPE parse_tree *
@@ -547,7 +547,7 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    74,    74,    80
+       0,    75,    75,    81
 };
 #endif
 
@@ -1341,13 +1341,13 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 74 "decaf.y"
+#line 75 "decaf.y"
              { top = yyval = yyvsp[0]; }
 #line 1347 "y.tab.c"
     break;
 
   case 3:
-#line 80 "decaf.y"
+#line 81 "decaf.y"
                { yyval = new parse_tree(mytok); }
 #line 1353 "y.tab.c"
     break;
@@ -1585,5 +1585,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 83 "decaf.y"
+#line 84 "decaf.y"
 
